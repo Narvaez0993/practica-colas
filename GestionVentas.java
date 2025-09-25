@@ -3,26 +3,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GestionVentas {
-    private List<Articulo> inventario;
+    private GestionInventario gestionInventario;
     private List<Articulo> carrito;
     private double totalVenta;
     private double totalVentasDelDia;
     private Scanner scanner;
 
-    public GestionVentas() {
-        this.inventario = new ArrayList<>();
+    public GestionVentas(GestionInventario gestionInventario) {
+        this.gestionInventario = gestionInventario;
         this.carrito = new ArrayList<>();
         this.totalVenta = 0.0;
         this.totalVentasDelDia = 0.0;
         this.scanner = new Scanner(System.in);
-        precargarInventario();
-    }
-
-    private void precargarInventario() {
-        inventario.add(new Articulo(1, "Leche", "Lácteos", 20, 2500.0));
-        inventario.add(new Articulo(2, "Pizzas Frias", "Comida", 50, 5000.0));
-        inventario.add(new Articulo(3, "Manzanas", "Frutas", 30, 800.0));
-        inventario.add(new Articulo(4, "Cola y pola", "Bebidas", 100, 2000.0));
     }
 
     public void atenderCliente(Cliente cliente) {
@@ -69,27 +61,23 @@ public class GestionVentas {
 
     private void registrarProducto() {
         System.out.println("\n--- Inventario Disponible ---");
-        for (Articulo art : inventario) {
-            System.out.println(art.getId() + ". " + art.getNombre() + " - $" + art.getPrecioPorUnidad());
+        for (Articulo art : gestionInventario.getInventario()) {
+            if (art.getEstado() == 0) {
+                System.out.println(art.getId() + ". " + art.getNombre() + " - $" + art.getPrecioPorUnidad());
+            }
         }
         System.out.print("Ingrese el ID del producto a agregar: ");
         try {
             int idProducto = Integer.parseInt(scanner.nextLine());
-            Articulo articuloSeleccionado = null;
-            for (Articulo art : inventario) {
-                if (art.getId() == idProducto) {
-                    articuloSeleccionado = art;
-                    break;
-                }
-            }
+            Articulo articuloSeleccionado = gestionInventario.buscarArticuloPorId(idProducto);
 
-            if (articuloSeleccionado != null && articuloSeleccionado.getExistencias() > 0) {
+            if (articuloSeleccionado != null && articuloSeleccionado.getExistencias() > 0 && articuloSeleccionado.getEstado() == 0) {
                 carrito.add(articuloSeleccionado);
                 articuloSeleccionado.setExistencias(articuloSeleccionado.getExistencias() - 1);
                 totalVenta += articuloSeleccionado.getPrecioPorUnidad();
                 System.out.println(articuloSeleccionado.getNombre() + " agregado al carrito.");
             } else {
-                System.out.println("Producto no encontrado o sin existencias.");
+                System.out.println("Producto no encontrado, sin existencias o inactivo.");
             }
         } catch (NumberFormatException e) {
             System.out.println("ID inválido. Intente de nuevo.");

@@ -31,4 +31,12 @@ public class GestionTurnos {
             }
         }
     }
+
+    public Cliente llamarSiguiente() {
+        if (colaClientes.isEmpty()) {
+            System.out.println("No hay clientes en la cola para atender.");
+            return null;
+        }
+        return colaClientes.poll();
+    }
 }

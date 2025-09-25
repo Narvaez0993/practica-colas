@@ -2,10 +2,12 @@ import java.util.Scanner;
 
 public class MenuPrincipal {
     private GestionTurnos gestionTurnos;
+    private GestionVentas gestionVentas;
     private Scanner scanner;
 
     public MenuPrincipal() {
         this.gestionTurnos = new GestionTurnos();
+        this.gestionVentas = new GestionVentas();
         this.scanner = new Scanner(System.in);
     }
 
@@ -15,6 +17,7 @@ public class MenuPrincipal {
             System.out.println("\n--- Supermercado Akira Toriyama ---");
             System.out.println("1. Tomar turno");
             System.out.println("2. Visualizar quien va en turno");
+            System.out.println("3. Atender Cliente");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -32,6 +35,9 @@ public class MenuPrincipal {
                 case 2:
                     gestionTurnos.visualizarTurnos();
                     break;
+                case 3:
+                    atenderCliente();
+                    break;
                 case 0:
                     System.out.println("Gracias por su visita.");
                     break;
@@ -44,9 +50,30 @@ public class MenuPrincipal {
     }
 
     private void tomarTurno() {
-        String cedula = leerEntrada("Ingrese su cédula: ");
+        String cedula = leerCedula("Ingrese su cédula: ");
         String nombre = leerEntrada("Ingrese su nombre: ");
         gestionTurnos.tomarTurno(cedula, nombre);
+    }
+
+    private void atenderCliente() {
+        Cliente clienteAtendido = gestionTurnos.llamarSiguiente();
+        if (clienteAtendido != null) {
+            gestionVentas.atenderCliente(clienteAtendido);
+        }
+    }
+
+    private String leerCedula(String mensaje) {
+        System.out.print(mensaje);
+        String cedula = scanner.nextLine();
+        if (cedula == null || cedula.trim().isEmpty()) {
+            System.out.println("La cédula no puede estar vacía. Por favor, intente de nuevo.");
+            return leerCedula(mensaje);
+        }
+        if (!cedula.matches("\\d+")) {
+            System.out.println("La cédula solo debe contener números. Por favor, intente de nuevo.");
+            return leerCedula(mensaje);
+        }
+        return cedula;
     }
 
     private String leerEntrada(String mensaje) {

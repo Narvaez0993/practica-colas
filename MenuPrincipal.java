@@ -18,6 +18,7 @@ public class MenuPrincipal {
             System.out.println("1. Tomar turno");
             System.out.println("2. Visualizar quien va en turno");
             System.out.println("3. Atender Cliente");
+            System.out.println("4. Visualizar estado de la cola");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -37,6 +38,9 @@ public class MenuPrincipal {
                     break;
                 case 3:
                     atenderCliente();
+                    break;
+                case 4:
+                    visualizarEstadoCola();
                     break;
                 case 0:
                     System.out.println("Gracias por su visita.");
@@ -60,6 +64,16 @@ public class MenuPrincipal {
         if (clienteAtendido != null) {
             gestionVentas.atenderCliente(clienteAtendido);
         }
+    }
+
+    private void visualizarEstadoCola() {
+        System.out.println("\n--- Estado Actual ---");
+        gestionTurnos.visualizarTurnos();
+        System.out.println();
+        gestionTurnos.visualizarClientesAtendidos();
+        System.out.println();
+        System.out.printf("Total de ventas del día: $%.2f\n", gestionVentas.getTotalVentasDelDia());
+        System.out.println("---------------------");
     }
 
     private String leerCedula(String mensaje) {

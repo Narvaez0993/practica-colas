@@ -6,12 +6,14 @@ public class GestionVentas {
     private List<Articulo> inventario;
     private List<Articulo> carrito;
     private double totalVenta;
+    private double totalVentasDelDia;
     private Scanner scanner;
 
     public GestionVentas() {
         this.inventario = new ArrayList<>();
         this.carrito = new ArrayList<>();
         this.totalVenta = 0.0;
+        this.totalVentasDelDia = 0.0;
         this.scanner = new Scanner(System.in);
         precargarInventario();
     }
@@ -135,7 +137,12 @@ public class GestionVentas {
     private void finalizarCompra() {
         visualizarTotal();
         System.out.println("Compra finalizada con éxito. ¡Gracias por su visita!");
+        totalVentasDelDia += totalVenta;
         carrito.clear();
         totalVenta = 0.0;
+    }
+
+    public double getTotalVentasDelDia() {
+        return totalVentasDelDia;
     }
 }
